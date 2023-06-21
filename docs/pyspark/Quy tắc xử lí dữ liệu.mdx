@@ -1,0 +1,13 @@
+---
+sidebar_position: 4
+---
+
+# Quy tắc xử lí dữ liệu
+
+DataFrame của pyspark là immutable. Do đó, khi ta thực hiện 1 mutation, ta phải ghi đè lên biến hiện tại. Lúc này, quá trình debug rất là khó. Do đó, ta phải có 1 bộ quy tắc, khi nào tạo biến mới, khi nào ghi đè, khi nào tạo columns mới ...
+
+Để xử lí columns một cách hiệu quả, ta chia các operations thành getters, setters & modifiers
+- `modifiers`: bao gồm các operations mutate trực tiếp lên columns (tức override mode). Các operations này gồm **deduplication**, **dropna**
+- `setters`: bao gồm các operations casting type, hoặc các operation mà được dùng cho các analysis sau này. Setters ko thay đổi trực tiếp giá trị cột, mà tạo ra 1 cột mới với prefix là type of setter
+    - bao gồm các operation *string → timestamp (tz)*, *string.split (split)*, timestamp functions like *datediff, days, month, years* …, grouping
+- `getters`: các class nhóm này là end format, dùng để trả về table cuối. bao gồm các operations như *timestamp → date format*, *number format*, … Getter trả về bằng `select()` + `f.col()`

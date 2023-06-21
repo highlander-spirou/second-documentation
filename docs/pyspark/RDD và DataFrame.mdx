@@ -1,0 +1,62 @@
+---
+sidebar_position: 3
+---
+
+# RDD và DataFrame
+
+**Resilient Distributed Dataset** là thành phần core nhất của spark. Nó gồm các tính chất sau
+    
+- **Resilient**: immutable
+- **Distributed**: Dataset đc chia thành các partition và cấp phát cho worker node làm việc
+
+Spark hoạt động dựa trên RDD, tuy nhiên nó ko native với python. Do đó, khi dùng pyspark, ta thao tác với 1 cấu trúc Spark Dataframe build on top of RDD.
+
+RDD actions and transformation
+
+- **Transformation** là dirty and lazy operation
+    - ***dirty*** tức nó ko lập tức thực hiện. Các transformation only thực hiện khi có một action được thực thi
+    - ***lazy*** là nó trả về 1 RDD khác, thay vì mutate cái RDD cũ
+- các phép `transformation` là các functional operations bao gồm `flatMap()`, `map()`, `reduceByKey()`, `filter()`, `sortByKey()`
+
+- **Actions** returns the values from an RDD to a driver node. Nó bao gồm aggregations như `count()`, `collect()`, `first()`, `max()`, `reduce()`
+
+## Để tạo ra 1 RDD
+
+```python title="Từ list"
+dataList = [("Java", 20000), ("Python", 100000), ("Scala", 3000)]
+rdd=spark.sparkContext.parallelize(dataList)
+```
+
+```python title="Từ file csv"
+file_path = "/datasets/airports.csv"
+airports_rdd = spark.read.csv(file_path, header=True, inferSchema=True, nullValue='NA')
+```
+
+## Để tạo ra 1 DataFrame
+
+```python title="Từ list (enforce schema)"
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+
+data = [("James",3000), ("Michael",4000)]
+
+schema = StructType([ \
+    StructField("firstname",StringType(),True), \
+    StructField("salary", IntegerType(), True) \
+  ])
+
+df = spark.createDataFrame(data=data,schema=schema)
+```
+
+```python title="Từ csv"
+df = spark.read.options(inferSchema='True',delimiter=',').csv('path')
+```
+
+```python title="Từ RDD"
+deptColumns = ["dept_name","dept_id"]
+df = rdd.toDF(deptColumns)
+```
+
+```python title="Từ pandas"
+dff.iteritems = dff.items # tại phiên bản pandas >= 2, ta phải dùng thêm syntax
+test_output = spark.createDataFrame(dff)
+```
