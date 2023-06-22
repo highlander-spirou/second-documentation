@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkcode_docs=self.webpackChunkcode_docs||[]).push([[441],{7946:s=>{s.exports=JSON.parse('{"title":"Pyspark","slug":"/category/pyspark","permalink":"/second-documentation/docs/category/pyspark","navigation":{"next":{"title":"Install Pyspark","permalink":"/second-documentation/docs/pyspark/Install pyspark"}}}')}}]);
