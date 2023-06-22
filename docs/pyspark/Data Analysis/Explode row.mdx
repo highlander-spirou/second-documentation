@@ -1,0 +1,25 @@
+# Explode row
+
+Explode row là phương thức chuyển 1 Array Struct, hoặc 1 cell có chứa **string with separator** thành nhiều rows
+
+```python title="String with separator"
+# split row that separated by comma to multiple rows
+df.withColumn('colA', 
+                f.explode(f.split('colA', ','))
+            )
+```
+
+*Ví dụ*: Create a continuous column from date 31/01/2023 to 14/02/2023
+
+```python title="Array Struct separator"
+# split row that from an Array Struct
+bank_statement.groupBy("Account Number").agg(
+    f.lit(datetime(2023, 2, 14)).alias("max_date"),
+    f.lit(datetime(2023, 1, 31)).alias("min_date")
+).select(
+    "Account Number",
+    f.expr("sequence(min_date, max_date, interval 1 day)").alias("Balance Date")
+).withColumn(
+    "Balance Date", f.explode("Balance Date")
+)
+```

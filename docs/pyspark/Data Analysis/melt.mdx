@@ -1,0 +1,7 @@
+# Melt dataframe
+
+Pyspark ko có native melt method. Nếu sử dụng bản pyspark 3.2.0, có thể transform nó thành **koalas dataframe**, sau đó melt và chuyển lại pyspark dataframe
+
+```pyspark
+df.to_koalas().melt(id_vars=['ColA', 'ColB'], value_vars=['ColC', 'ColD']).to_spark()
+```

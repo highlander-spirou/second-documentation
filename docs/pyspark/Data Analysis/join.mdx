@@ -1,0 +1,21 @@
+# Join
+
+Join của pyspark khá giống `merge` của pandas.
+
+Có 1 điểm khác biệt của `join` là ta có thể dùng boolean expression hoặc dùng columns keys.
+
+```python title="Boolean expression"
+df3 = df1.join(df2, 
+                (df1['colA'] == df2['colB']) & (df1['colC'] == df2['colD']), 
+                how='left')
+```
+
+<p style={{color: 'red'}}>
+Khi join bằng Boolean expression, tất cả mọi cột dù là key columns đều sẽ xuất hiện trong result table (duplicated key name)
+</p>
+
+```python title="Column keys"
+df3 = df1.join(df2, on=['Bank'], how='left')
+```
+
+Khi join bằng Column keys, các columns trong ***on*** sẽ chỉ xuất hiện 1 lần

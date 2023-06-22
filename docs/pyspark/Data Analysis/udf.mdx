@@ -1,0 +1,38 @@
+# User defined function
+
+## No external argument
+
+```python
+from pyspark.sql import functions as f
+from pyspark.sql.types import FloatType
+
+# 1. Define the python function
+def money_to_number(s):
+    s = s[1:]
+    return float(s)
+
+# 2. Define a pyspark function
+#? all pyspark's UDF expect an column as the parameter
+moneyUDF = f.udf(lambda x: money_to_number(x),FloatType())
+
+# 3. Use the pyspark function
+df = df.withColumn('Market Cap value', moneyUDF(f.col('Market Cap')))
+```
+
+## With external argument
+
+Đối với external argument, ta dùng theo pattern wrapper function, thay vì định nghĩa 1 python function và 1 pyspark function.
+Tuy nhiên, 1 qui tắc cần phải tuân thủ, đó là kết quả bên trong lambda function bắt buộc phải là 1 scalar.
+
+```python
+from pyspark.sql import functions as f
+from pyspark.sql.types import StringType
+
+# 1. Define a wrapper function that return the udf
+def translate(dictionary):
+    return f.udf(lambda col: dictionary.get(col), StringType())
+
+# 2. Use the pyspark function
+some_collection = {} # some dictionary for lookup
+df = df.withColumn("Transaction Date", translate(some_collection)(f.col("Transaction Date")))
+```

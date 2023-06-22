@@ -1,0 +1,16 @@
+# Groupby and Aggregation
+
+Có 2 cách sử dụng aggregation là gọi trực tiếp method (with only one agg function) hoặc dùng `.agg()` method
+
+```python title="Dùng trực tiếp"
+output = df.groupBy("Bank") \
+            .sum("Value") \
+            .withColumnRenamed('sum(Value)', 'Value')
+```
+
+```python title="Dùng .agg()"
+output = df.groupBy("Bank") \
+            .agg(f.min(f.col("age")).alias("min_age"),
+                f.max(f.col("age")).alias("max_age")
+                )
+```

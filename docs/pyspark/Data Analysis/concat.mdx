@@ -1,0 +1,16 @@
+# Concat (stack) dataframes
+
+Để concat nhiều dataframe, ta có thể dùng utility function wrap pyspark `unionAll` method
+
+```python
+from pyspark.sql import DataFrame
+from functools import reduce
+
+def unionAll(*dfs):
+    return reduce(DataFrame.unionAll, dfs)
+
+# Sử dụng
+
+unionAll(*[df1, df2, df3])
+unionAll(df1, df2, df3)
+```

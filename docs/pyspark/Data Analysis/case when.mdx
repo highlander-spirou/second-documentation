@@ -1,0 +1,11 @@
+# Case when 
+
+```python
+df.withColumn("category", 
+                f.when(f.col('Diff') <=-2, "Mobile App Superfan")
+                .when(f.col('Diff') <=-1, "Mobile App Fan")
+                .when(f.col('Diff') >=2, "Online Interface Superfan")
+                .when(f.col('Diff') >=1, "Online Interface Fan")
+                .otherwise('Neutral')
+            )
+```
