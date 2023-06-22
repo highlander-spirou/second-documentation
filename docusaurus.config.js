@@ -84,6 +84,16 @@ const config = {
           },
         ],
       },
+      algolia: {
+        apiKey: '4a691ea463d2693736c422329ee2b191',
+        indexName: 'second-documentation2234',
+        appId: 'IYWIXDU8QY',
+  
+        // Optional: see doc section bellow
+        // contextualSearch: true,
+  
+        //... other Algolia params
+      },
       footer: {
         style: 'dark',
         links: [
