@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcode_docs=self.webpackChunkcode_docs||[]).push([[1977],{636:e=>{e.exports=JSON.parse('{"title":"SQL","slug":"/category/sql","permalink":"/second-documentation/docs/category/sql","navigation":{"next":{"title":"Th\u1ee9 t\u1ef1 th\u1ef1c thi c\xe2u l\u1ec7nh SQL","permalink":"/second-documentation/docs/sql/Execution order"}}}')}}]);

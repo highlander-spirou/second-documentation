@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcode_docs=self.webpackChunkcode_docs||[]).push([[4195],{2841:(e,t,n)=>{n.r(t),n.d(t,{default:()=>c});var a=n(7294),l=n(7452);const c=()=>a.createElement(a.Fragment,null,a.createElement(l.Z,null,a.createElement("div",null,"I used to put everything on Notion. This page is a more organize way.")))}}]);
