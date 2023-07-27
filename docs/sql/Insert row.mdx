@@ -1,0 +1,13 @@
+# Insert rows
+
+## Insert row with value from an aggregation
+
+Ta biết rằng, hầu hết các phép aggregations trả về 1 scalar. Do đó, ta có thể dùng giá trị scalar này để làm giá trị default for insert statement
+
+```sql
+insert into table_1 (id, name, cost)  
+	select 2, 'Spa', (select min(cost) from table_1 + 1)
+```
+
+Vì populate từ 1 cột, ta ko dùng **VALUES** mà dùng **SELECT**. Hàm **SELECT** sẽ yêu cầu SQL thực thi bất kì câu lệnh queries nào (trong ví dụ trên là aggregate cost of table_1), sau đó câu lệnh **INSERT INTO** thực thị gán quá trị nào vào. 
+Các giá trị static còn lại sẽ được thêm vào accordingly theo thứ tự specified từ `insert into` 

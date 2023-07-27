@@ -1,0 +1,178 @@
+---
+sidebar_position: 1
+---
+
+import {
+  AccordionComponentItem,
+  Accordion,
+} from "../../src/components/Accordion";
+import CodeBlock from "@theme/CodeBlock";
+
+# Create GraphQL server with Strapi
+
+_[Reference 1](https://strapi.io/blog/extending-and-building-custom-resolvers-with-strapi-v4)_,
+_[Reference 2](https://strapi.io/blog/a-deep-dive-into-strapi-graph-ql)_
+
+## Install GraphQL plugins trên Strapi
+
+```bash
+yarn strapi install graphql
+```
+
+## CRUD
+
+GraphQL trên Strapi đã được tối ưu hóa với schema JSON có sẵn, cho phép ta thực hiện CRUD trực tiếp trên graphql (Bật permission public !!!)
+
+<Accordion>
+  <AccordionComponentItem id="item-1" header="Fetch all instances">
+    <CodeBlock language="graphql" title="Fetch all instances">
+      {`
+query {
+  blogs {
+    data {
+      id
+      attributes {
+        Date
+        Title
+        Body
+      }
+    }
+  }
+}
+      `}
+    </CodeBlock>
+  </AccordionComponentItem>
+  <AccordionComponentItem id="item-2" header="Fetch one instance">
+    <CodeBlock language="graphql" title="Fetch one instance">
+      {`
+query {
+  blog(id: "1") {
+    data {
+      attributes {
+        Date
+        Title
+        Body
+      }
+    }
+  }
+}`}
+    </CodeBlock>
+  </AccordionComponentItem>
+  <AccordionComponentItem id="item-3" header="Create instance">
+    <CodeBlock language="graphql" title="Create instance">
+      {`
+mutation blogs {
+  createBlog(
+    data: {
+      Title: "Fifth Post"
+      Body: " This is the fifth blog post. It  was created using a graphQl mutaiton from the strapi graphql playground"
+    }
+  ) {
+    data {
+      attributes {
+        Title
+      }
+    }
+  }
+}
+`}
+    </CodeBlock>
+  </AccordionComponentItem>
+  <AccordionComponentItem id="item-4" header="Update instance">
+    <CodeBlock language="graphql" title="Update instance">
+      {`
+mutation blogs {
+  updateBlog(
+    id: "7"
+    data: {
+      Title: "Fifth Post"
+      Body: " This is the fifth blog post. It  was created using a graphQl mutaiton from the strapi graphql playground"
+    }
+  ) {
+    data {
+      attributes {
+        Title
+      }
+    }
+  }
+}
+`}
+    </CodeBlock>
+  </AccordionComponentItem>
+  <AccordionComponentItem id="item-5" header="Delete instance">
+    <CodeBlock language="graphql" title="Delete instance">
+      {`
+mutation {
+  deleteBlog(id: "5") {
+    data {
+      attributes {
+        Title
+      }
+    }
+  }
+}
+`}
+    </CodeBlock>
+  </AccordionComponentItem>
+</Accordion>
+
+## Custom GraphQL endpoint
+
+Các phương thức mới của GraphQL plugins trong Strapi đều đc đặt tại register, trước khi App bắt đầu vòng đời
+
+```ts
+register({ strapi }) {
+  const extensionService = strapi.service("plugin::graphql.extension");
+
+  extensionService.use(({ strapi }) => ({
+    typeDefs: ``,
+    resolvers: {},
+    resolversConfig: {},
+    })
+  );
+}
+```
+
+Tạo Query endpoint bên trong `typeDefs`:
+
+```ts
+typeDefs: `
+  type Query {
+    _QueryName_(some_param: String!): ReturnSchema
+  }
+
+  type ReturnSchema {
+    id: ID
+    name: String
+  }
+`;
+```
+
+Viết logic (`resolver`) cho endpoint:
+
+```ts
+resolvers: {
+  Query: {
+    _QueryName_: {
+      resolve: async (parent, args, context) => {
+        // mọi params trong Query trong `args`
+        const data = await strapi.some_logic(args.some_params);
+        return {
+          id: data.id,
+          name: data.name,
+        };
+      };
+    }
+  }
+}
+```
+
+Cấp quyền cho endpoint chạy public (hoặc yêu cầu JWT)
+
+```ts
+resolversConfig: {
+  "Query._QueryName_": {
+    auth: false,
+  },
+},
+```

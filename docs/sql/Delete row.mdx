@@ -1,0 +1,17 @@
+# Delete rows
+
+## Xóa các dòng mà nó không tồn tại trong bảng khác
+
+```sql
+delete from cd.members 
+where memid not in (select memid from cd.bookings);
+```
+Lúc này, **WHERE** sẽ chạy câu lệnh và truy vấn subqueries 1 lần duy nhất. 
+Tuy nhiên, ta đã biết câu lệnh subqueries from **WHERE** có thể đc translate thành câu lệnh correlated subqueries (`Subqueries from select`). Lúc này, hàm **DELETE** sẽ xóa tuần tự các id xuất hiện bên trong **SELECT**, thay vì xóa 1 lần trong **WHERE**
+
+```sql 
+delete from cd.members mems 
+where not exists 
+	(select 1 from cd.bookings bks
+	where bks.memid = mems.memid);
+```

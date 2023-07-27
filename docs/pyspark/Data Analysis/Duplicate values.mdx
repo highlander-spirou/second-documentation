@@ -1,0 +1,33 @@
+# Duplicate values
+
+## Find duplicate values
+
+```python
+subsets = ['Account Number', 'Balance Date']
+dup = transactions.join(
+    transactions.groupBy(subsets) \
+    .agg((f.count("*")>1).cast("int").alias("Duplicate_indicator")),
+    on=subsets,
+    how="inner"
+).filter(f.col('Duplicate_indicator') > 0)
+```
+
+## Drop duplicate (without comparison)
+
+```python
+df = df.drop_duplicates(subset=['Account Number', 'Balance Date'])
+```
+
+## Drop duplicate (keep=first)
+
+Drop duplication with order rất phức tạp vì trong Distributed computing, ta rất khó rank tất cả các occurrance.
+Do đó, cách duy nhất để làm là dùng `.coalesce(1)` để dồn mọi thứ lại thành 1 unit computing duy nhất, order nó, sau đó `drop_duplicates`
+
+```python
+ffill_tbl.orderBy(
+    f.col('Account Number'),
+    f.col('Balance Date tz'),
+    f.col('rownum').asc(),
+    ).coalesce(1)\
+    .drop_duplicates(subset=['Account Number', 'Balance Date tz'])
+```

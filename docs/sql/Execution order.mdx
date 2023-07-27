@@ -1,0 +1,16 @@
+---
+sidebar_position: 1
+---
+
+# Thứ tự thực thi câu lệnh SQL
+
+1. **`FROM`**: Trả về các rows thỏa điều kiện **ON** của **JOIN** hoặc từ subqueries
+2. **`WHERE`**: conditions are evaluated and rows that do not match are removed.
+3. **`GROUP BY`**: rows are grouped (and every group collapses to one row)
+4. **`HAVING`**: evaluate the results of **GROUP BY** and rows that do not match are removed.
+5. **`SELECT`**: filter by columns, including normal columns and ones in **CASE WHEN**
+6. **`DISTINCT`**: duplicate rows are removed (if it's a SELECT DISTINCT statement)
+7. **`UNION`**, **`EXCEPT`**, **`INTERSECT`**: the action of that operand is taken upon the rows of sub-SELECT statements. For example, if it's a UNION, all rows are gathered (and duplicates eliminated unless it's a UNION ALL) after all sub-SELECT statements are evaluated. Accordingly for the EXCEPT or INTERSECT cases.
+8. **`ORDER BY`**: rows are ordered.
+
+Có thể thấy, **CASE WHEN** luôn luôn được thực thi sau 2 phép filter là **WHERE** và **HAVING**, do đó, để thực hiện filter lệnh trên **CASE WHEN**, ta phải bỏ cột đó trên **FROM**. Có 2 cách có thể thực hiện là dùng `temp_table` sau đó **JOIN**, hoặc dùng `SUBQUERIES from FROM`

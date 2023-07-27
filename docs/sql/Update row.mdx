@@ -1,0 +1,17 @@
+# Update rows
+
+## Update rows from a subquery
+
+Ta có thể tổng hợp kết quả từ một bảng (một subquery), và dùng kết quả đó để update cho một bảng khác.
+
+```sql
+update table_1 t1 
+	set membercost = t2.membercost *  1.1, 
+	guestcost = t2.guestcost *  1.1  
+from
+	-- This query must return 1 row only
+	(select * from table_2 where id = 1) t2
+where t1.name LIKE 'HAHA';
+```
+
+Ở ví dụ trên, ta dùng kết quả query từ `t2 table` để update lần lượt kết quả từ `t1 table`

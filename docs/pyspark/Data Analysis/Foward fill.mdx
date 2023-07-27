@@ -1,0 +1,15 @@
+# Fill missing data from row
+
+Ta có thể fill các dữ liệu null từ các dòng đứng trước hoặc đứng sau nó.
+Nếu giá trị của dòng đứng trước đc dùng để fill missing data của ô đứng sau, ta gọi là foward-fill (ffill)
+
+Trong pyspark, phép foward fill hạn chế sử dụng, do ta lấy đi bản chất quan trọng nhất của pyspark: Distributed computing.
+Do đó, ta có thể sử dụng window function với `f.last()`, giúp hạn chế việc load quá nhiều data vào vùng nhớ bằng cách sử dụng window function
+
+```python
+w = Window.partitionBy(['Account Number']).orderBy(["Balance Date"])
+
+ffill_tbl = df.select(
+    f.last(f.col('colA'), ignorenulls=True).over(w).alias('colA')
+)
+```
